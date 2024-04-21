@@ -2,7 +2,7 @@
 
 ## MsgAddObserver
 
-Authorized: admin policy group 2.
+AddObserver adds an observer address to the observer set
 
 ```proto
 message MsgAddObserver {
@@ -16,7 +16,7 @@ message MsgAddObserver {
 ## MsgUpdateObserver
 
 UpdateObserver handles updating an observer address
-Authorized: admin policy group 2 (admin update), old observer address (if the
+Authorized: admin policy (admin update), old observer address (if the
 reason is that the observer was tombstoned).
 
 ```proto
@@ -94,17 +94,52 @@ message MsgUpdateKeygen {
 }
 ```
 
-## MsgAddBlockHeader
+## MsgVoteBlockHeader
 
-AddBlockHeader handles adding a block header to the store, through majority voting of observers
+VoteBlockHeader vote for a new block header to the storers
 
 ```proto
-message MsgAddBlockHeader {
+message MsgVoteBlockHeader {
 	string creator = 1;
 	int64 chain_id = 2;
 	bytes block_hash = 3;
 	int64 height = 4;
-	common.HeaderData header = 5;
+	proofs.HeaderData header = 5;
+}
+```
+
+## MsgResetChainNonces
+
+ResetChainNonces handles resetting chain nonces
+
+```proto
+message MsgResetChainNonces {
+	string creator = 1;
+	int64 chain_id = 2;
+	int64 chain_nonce_low = 3;
+	int64 chain_nonce_high = 4;
+}
+```
+
+## MsgVoteTSS
+
+VoteTSS votes on creating a TSS key and recording the information about it (public
+key, participant and operator addresses, finalized and keygen heights).
+
+If the vote passes, the information about the TSS key is recorded on chain
+and the status of the keygen is set to "success".
+
+Fails if the keygen does not exist, the keygen has been already
+completed, or the keygen has failed.
+
+Only node accounts are authorized to broadcast this message.
+
+```proto
+message MsgVoteTSS {
+	string creator = 1;
+	string tss_pubkey = 2;
+	int64 keygen_zeta_height = 3;
+	chains.ReceiveStatus status = 4;
 }
 ```
 

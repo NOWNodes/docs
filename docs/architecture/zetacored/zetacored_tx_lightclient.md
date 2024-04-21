@@ -1,15 +1,15 @@
-# tx emissions
+# tx lightclient
 
-emissions transactions subcommands
+lightclient transactions subcommands
 
 ```
-zetacored tx emissions [flags]
+zetacored tx lightclient [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for emissions
+  -h, --help   help for lightclient
 ```
 
 ### Options inherited from parent commands
@@ -25,5 +25,5 @@ zetacored tx emissions [flags]
 ### SEE ALSO
 
 * [zetacored tx](zetacored_tx.md)	 - Transactions subcommands
-* [zetacored tx emissions withdraw-emission](zetacored_tx_emissions_withdraw-emission.md)	 - create a new withdrawEmission
+* [zetacored tx lightclient update-verification-flags](zetacored_tx_lightclient_update-verification-flags.md)	 - Update verification flags
 

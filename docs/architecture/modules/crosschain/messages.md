@@ -6,15 +6,13 @@ AddToOutTxTracker adds a new record to the outbound transaction tracker.
 only the admin policy account and the observer validators are authorized to broadcast this message without proof.
 If no pending cctx is found, the tracker is removed, if there is an existed tracker with the nonce & chainID.
 
-Authorized: admin policy group 1, observer.
-
 ```proto
 message MsgAddToOutTxTracker {
 	string creator = 1;
 	int64 chain_id = 2;
 	uint64 nonce = 3;
 	string tx_hash = 4;
-	common.Proof proof = 5;
+	proofs.Proof proof = 5;
 	string block_hash = 6;
 	int64 tx_index = 7;
 }
@@ -24,15 +22,13 @@ message MsgAddToOutTxTracker {
 
 AddToInTxTracker adds a new record to the inbound transaction tracker.
 
-Authorized: admin policy group 1, observer.
-
 ```proto
 message MsgAddToInTxTracker {
 	string creator = 1;
 	int64 chain_id = 2;
 	string tx_hash = 3;
-	common.CoinType coin_type = 4;
-	common.Proof proof = 5;
+	coin.CoinType coin_type = 4;
+	proofs.Proof proof = 5;
 	string block_hash = 6;
 	int64 tx_index = 7;
 }
@@ -52,16 +48,16 @@ message MsgRemoveFromOutTxTracker {
 }
 ```
 
-## MsgGasPriceVoter
+## MsgVoteGasPrice
 
-GasPriceVoter submits information about the connected chain's gas price at a specific block
+VoteGasPrice submits information about the connected chain's gas price at a specific block
 height. Gas price submitted by each validator is recorded separately and a
 median index is updated.
 
 Only observer validators are authorized to broadcast this message.
 
 ```proto
-message MsgGasPriceVoter {
+message MsgVoteGasPrice {
 	string creator = 1;
 	int64 chain_id = 2;
 	uint64 price = 3;
@@ -124,10 +120,10 @@ message MsgVoteOnObservedOutboundTx {
 	string observed_outTx_effective_gas_price = 11;
 	uint64 observed_outTx_effective_gas_limit = 12;
 	string value_received = 5;
-	common.ReceiveStatus status = 6;
+	chains.ReceiveStatus status = 6;
 	int64 outTx_chain = 7;
 	uint64 outTx_tss_nonce = 8;
-	common.CoinType coin_type = 9;
+	coin.CoinType coin_type = 9;
 }
 ```
 
@@ -187,7 +183,7 @@ message MsgVoteOnObservedInboundTx {
 	string in_tx_hash = 9;
 	uint64 in_block_height = 10;
 	uint64 gas_limit = 11;
-	common.CoinType coin_type = 12;
+	coin.CoinType coin_type = 12;
 	string tx_origin = 13;
 	string asset = 14;
 	uint64 event_index = 15;
@@ -215,7 +211,7 @@ message MsgWhitelistERC20 {
 
 ## MsgUpdateTssAddress
 
-Authorized: admin policy group 2.
+UpdateTssAddress updates the TSS address.
 
 ```proto
 message MsgUpdateTssAddress {
@@ -226,35 +222,13 @@ message MsgUpdateTssAddress {
 
 ## MsgMigrateTssFunds
 
-Authorized: admin policy group 2.
+MigrateTssFunds migrates the funds from the current TSS to the new TSS
 
 ```proto
 message MsgMigrateTssFunds {
 	string creator = 1;
 	int64 chain_id = 2;
 	string amount = 3;
-}
-```
-
-## MsgCreateTSSVoter
-
-CreateTSSVoter votes on creating a TSS key and recording the information about it (public
-key, participant and operator addresses, finalized and keygen heights).
-
-If the vote passes, the information about the TSS key is recorded on chain
-and the status of the keygen is set to "success".
-
-Fails if the keygen does not exist, the keygen has been already
-completed, or the keygen has failed.
-
-Only node accounts are authorized to broadcast this message.
-
-```proto
-message MsgCreateTSSVoter {
-	string creator = 1;
-	string tss_pubkey = 2;
-	int64 keyGenZetaHeight = 3;
-	common.ReceiveStatus status = 4;
 }
 ```
 
@@ -283,6 +257,18 @@ message MsgRefundAbortedCCTX {
 	string creator = 1;
 	string cctx_index = 2;
 	string refund_address = 3;
+}
+```
+
+## MsgUpdateRateLimiterFlags
+
+UpdateRateLimiterFlags updates the rate limiter flags.
+Authorized: admin policy operational.
+
+```proto
+message MsgUpdateRateLimiterFlags {
+	string creator = 1;
+	RateLimiterFlags rate_limiter_flags = 2;
 }
 ```
 
